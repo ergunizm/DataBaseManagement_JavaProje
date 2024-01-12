@@ -25,12 +25,14 @@ public class CompanyPanel extends JPanel {
         orgTable = new JTable();
         cidField = new JTextField(9);
 
-        orgs = DBUtil.selectAllFromDB("organizations");
+        orgs = DBUtil.selectOrgOfCompany(cidField.getText());
 
         getButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(!orgs.isEmpty()){
+                    dftm.setColumnCount(0);
+                    dftm.setRowCount(0);
                     dftm.addColumn("Type");
                     dftm.addColumn("Limit");
                     dftm.addColumn("Season");
@@ -48,7 +50,7 @@ public class CompanyPanel extends JPanel {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddOrgFrame addFrame = new AddOrgFrame(cidField.getText(), orgs.size());
+                AddOrgFrame addFrame = new AddOrgFrame(cidField.getText());
                 addFrame.setVisible(true);
             }
         });

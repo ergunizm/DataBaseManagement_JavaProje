@@ -2,10 +2,7 @@ package com.example.utils;
 
 import java.lang.reflect.Type;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.example.models.Material;
 import com.example.models.Model;
@@ -105,26 +102,51 @@ public class DBUtil {
         }
     }
 
-    public static void updateGuestLimit(Organization organization, int newNumber) {
-        ColoredOutput.print("Updating " + organization.getGuestLimit() + " to the " + newNumber + ".",
+    public static String insertToOrganizations(Organization organization) {
+        ColoredOutput.print("Inserting " + organization.toString() + " to the table " + organization.getTableName() + ".",
                 ColoredOutput.Color.MAGENTA_BOLD_BRIGHT);
 
-        String query = "UPDATE organizations SET glimit=" +newNumber+ " WHERE oid=" + organization.getOrgId() + ";";
+        String query = "insert into organizations (comp_id, otype, glimit, season, price, orgdate, availability) values(?, ?, ?, ?, ?, ?, ?);";
 
-        // execute the query
-        try {
-            connection.createStatement().executeUpdate(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, organization.getCompanyId());
+            preparedStatement.setString(2, organization.getOrgType());
+            preparedStatement.setInt(3, organization.getGuestLimit());
+            preparedStatement.setString(4, organization.getSeason());
+            preparedStatement.setDouble(5, organization.getPrice());
+            preparedStatement.setInt(6, organization.getOrgDate());
+            preparedStatement.setBoolean(7, organization.getAvailability());
+
+            int result = preparedStatement.executeUpdate();
+
+            if (result > 0) {
+                return "Organization is added!";
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
+        return null;
     }
 
-    public static <Organization> List<Organization> selectSeasonTypeUnion(String searchedSeason, String type){
-        ColoredOutput.print("Getting all " + type + " activities or Done on " + searchedSeason + ".",
+    public static String[] getOrgTypes() {
+
+        List<Organization> partyTypes = DBUtil.selectAllFromDB("organizations");
+
+        Set<String> uniquePartyTypes = new HashSet<>();
+
+        for (Organization partyType : partyTypes) {
+            uniquePartyTypes.add(partyType.getOrgType());
+        }
+
+        return uniquePartyTypes.toArray(new String[0]);
+    }
+
+    public static <Organization> List<Organization> selectSeasonTypeIntersect(String searchedSeason, String type){
+        ColoredOutput.print("Getting all " + type + " activities and Done on " + searchedSeason + ".",
                 ColoredOutput.Color.MAGENTA_BOLD_BRIGHT);
 
-        String query = "(SELECT DISTINCT * FROM organizations WHERE season=" +searchedSeason+ ") " +
-                "UNION (SELECT DISTINCT * FROM organizations WHERE otype=" + type + ";";
+        String query = "(SELECT DISTINCT * FROM organizations WHERE season=\'" +searchedSeason+ "\') " +
+                "INTERSECT (SELECT DISTINCT * FROM organizations WHERE otype=\'" + type + "\');";
 
         ResultSet rs = null;
         try {
@@ -139,6 +161,29 @@ public class DBUtil {
             orgs = ResultSetToListUtil.convert(rs, "organizations");
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        return orgs;
+    }
+
+    public static <Organization> List<Organization> selectOrgOfCompany(String cid) {
+        String query = "SELECT * FROM organizations where comp_id=?;";
+
+        ResultSet rs = null;
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1,cid);
+            rs = ps.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        List<Organization> orgs = null;
+
+        try {
+            orgs = ResultSetToListUtil.convert(rs, "organizations");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
         return orgs;
@@ -200,4 +245,83 @@ public class DBUtil {
         return price;
     }
 
+    public static String updateMaterial(String oldId, Material material) {
+        String query = "update materials set mid = ?, comp_id = ?, mtype= ?, barcode = ?, price = ? WHERE mid = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, material.getMaterialId());
+            preparedStatement.setString(2, material.getCompanyId());
+            preparedStatement.setString(3, material.getMaterialType());
+            preparedStatement.setString(4, material.getBarcode());
+            preparedStatement.setDouble(5, material.getPrice());
+            preparedStatement.setString(6, oldId);
+
+            int result = preparedStatement.executeUpdate();
+
+            if (result > 0) {
+                return "Trigger executed : Material updated successfully!";
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return null;
+    }
+
+    public static String updateOrganization(String oldId, Organization organization) {
+        String query = "update organizations set oid = ?, comp_id = ?, otype= ?, glimit = ?, season = ?, price = ?, orgdate = ?, availability = ? WHERE oid = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, organization.getOrgId());
+            preparedStatement.setString(2, organization.getCompanyId());
+            preparedStatement.setString(3, organization.getOrgType());
+            preparedStatement.setInt(4, organization.getGuestLimit());
+            preparedStatement.setString(5, organization.getSeason());
+            preparedStatement.setDouble(6, organization.getPrice());
+            preparedStatement.setInt(7, organization.getOrgDate());
+            preparedStatement.setBoolean(8, organization.getAvailability());
+            preparedStatement.setString(9, oldId);
+
+            int result = preparedStatement.executeUpdate();
+
+            if (result > 0) {
+                return "Trigger executed : Organization updated successfully!";
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return null;
+    }
+
+    public static String deleteOrganization(String orgId) {
+        String query = "delete from organizations where oid = ?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, orgId);
+
+            preparedStatement.executeUpdate();
+
+            return orgId+" is deleted!";
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public static String addOrgToUser(String user_ssn, int orgId) {
+        String result;
+        try {
+            CallableStatement cstmt = connection.prepareCall("{? = call add_org_to_user(?, ?)}");
+            cstmt.setInt(2, orgId);
+            cstmt.setString(3, user_ssn.trim());
+            cstmt.registerOutParameter(1, 12);
+            cstmt.execute();
+
+            result = cstmt.getString(1);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return result;
+    }
 }

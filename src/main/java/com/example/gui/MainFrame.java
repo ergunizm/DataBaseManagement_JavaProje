@@ -6,9 +6,7 @@ import java.awt.event.ActionEvent;
 
 public abstract class MainFrame extends JFrame {
     JPanel mainPanel;
-    JPanel topBarPanel;
     JPanel contentPanel;
-    JLabel titleLabel;
     String ssn;
 
     public MainFrame(String ssn) {

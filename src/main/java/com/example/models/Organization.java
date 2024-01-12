@@ -3,7 +3,7 @@ package com.example.models;
 import java.util.Date;
 
 public class Organization extends Model {
-    private String orgId;
+    private int orgId;
     private String companyId;
     private String orgType;
     private int guestLimit;
@@ -19,16 +19,16 @@ public class Organization extends Model {
 
     @Override
     public String toString() {
-        return "\'" + orgId + "\' , \'" + companyId + "\' , \'" + orgType + "\' ," + guestLimit + " , \'" + season + "\'," + price
+        return "\'" + companyId + "\' , \'" + orgType + "\' ," + guestLimit + " , \'" + season + "\'," + price
                 + "," + orgDate + "," + availability;
     }
 
     // #region Getters and Setters --------------------------------------------
-    public String getOrgId() {
+    public int getOrgId() {
         return orgId;
     }
 
-    public void setOrgId(String orgId) {
+    public void setOrgId(int orgId) {
         this.orgId = orgId;
     }
 

@@ -4,7 +4,7 @@ public class User extends Model {
     private String ssn;
     private String firstName;
     private String lastName;
-    private String orgId;
+    private int orgId;
     private String password;
 
     public String getSsn() {
@@ -31,11 +31,11 @@ public class User extends Model {
         this.lastName = lastName;
     }
 
-    public String getOrgId() {
+    public int getOrgId() {
         return orgId;
     }
 
-    public void setOrgId(String orgId) {
+    public void setOrgId(int orgId) {
         this.orgId = orgId;
     }
 

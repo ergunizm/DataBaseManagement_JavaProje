@@ -39,7 +39,7 @@ public class ResultSetToListUtil {
             user.setSsn(rs.getString(1));
             user.setFirstName(rs.getString(2));
             user.setLastName(rs.getString(3));
-            user.setOrgId(rs.getString(4));
+            user.setOrgId(rs.getInt(4));
             user.setPassword(rs.getString(5));
             users.add(user);
         }
@@ -72,7 +72,7 @@ public class ResultSetToListUtil {
         // iterate through the result set
         while (rs.next()) {
             Organization organization = new Organization();
-            organization.setOrgId(rs.getString(1));
+            organization.setOrgId(rs.getInt(1));
             organization.setCompanyId(rs.getString(2));
             organization.setOrgType(rs.getString(3));
             organization.setGuestLimit(rs.getInt(4));
