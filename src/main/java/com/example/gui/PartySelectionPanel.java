@@ -5,6 +5,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,8 @@ public class PartySelectionPanel extends JPanel {
 
         addOrgButton = new JButton("Add Party");
 
-        JPanel panel = new JPanel();
+        // with layout of vertically
+        JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(Theme.bgColor);
 
         partyTypeComboBox = new JComboBox<>(orgTypes);
@@ -38,7 +41,7 @@ public class PartySelectionPanel extends JPanel {
         partyTypeComboBox.setFont(Theme.font);
         partyTypeComboBox.setEditable(true);
 
-        String[] seasons = {"winter","spring","summer","fall"} ;
+        String[] seasons = { "winter", "spring", "summer", "fall" };
 
         seasonComboBox = new JComboBox<>(seasons);
         seasonComboBox.setBackground(Theme.bgColor);
@@ -54,7 +57,7 @@ public class PartySelectionPanel extends JPanel {
 
                 orgs = DBUtil.selectSeasonTypeIntersect((String) seasonComboBox.getSelectedItem(), selectedPartyType);
 
-                if(!orgs.isEmpty()){
+                if (!orgs.isEmpty()) {
                     dftm.setColumnCount(0);
                     dftm.setRowCount(0);
                     dftm.addColumn("ID");
@@ -63,8 +66,9 @@ public class PartySelectionPanel extends JPanel {
                     dftm.addColumn("Season");
                     dftm.addColumn("Availability");
                     dftm.addColumn("Date");
-                    for(Organization org : orgs){
-                        dftm.addRow(new Object[]{org.getOrgId(), org.getOrgType(), org.getGuestLimit(), org.getSeason(), org.getAvailability(), org.getOrgDate()});
+                    for (Organization org : orgs) {
+                        dftm.addRow(new Object[] { org.getOrgId(), org.getOrgType(), org.getGuestLimit(),
+                                org.getSeason(), org.getAvailability(), org.getOrgDate() });
                     }
 
                     orgTable.setModel(dftm);
@@ -77,8 +81,8 @@ public class PartySelectionPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = orgTable.getSelectedRow();
 
-                if(selectedRow != -1){
-                    int selectedId = (int) orgTable.getValueAt(selectedRow,0);
+                if (selectedRow != -1) {
+                    int selectedId = (int) orgTable.getValueAt(selectedRow, 0);
 
                     String result = DBUtil.addOrgToUser(user_ssn, selectedId);
 
@@ -90,12 +94,26 @@ public class PartySelectionPanel extends JPanel {
         JLabel label = new JLabel("Party Type:");
         label.setForeground(Color.WHITE);
 
-        panel.add(label);
-        panel.add(seasonComboBox);
-        panel.add(partyTypeComboBox);
-        panel.add(addOrgButton);
-        panel.add(new JScrollPane(orgTable));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(label, gbc);
 
+        gbc.gridy = 1;
+        panel.add(seasonComboBox, gbc);
+
+        gbc.gridy = 2;
+        panel.add(partyTypeComboBox, gbc);
+
+        gbc.gridy = 3;
+        panel.add(addOrgButton, gbc);
+
+        gbc.gridy = 4;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel.add(new JScrollPane(orgTable), gbc);
 
         add(panel);
         setVisible(true);

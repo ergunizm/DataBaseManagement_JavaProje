@@ -78,11 +78,7 @@ public class HomeFrame extends MainFrame {
 
         leftPanel.setSize(new Dimension(576, 576));
 
-        contentPanel.add(leftPanel, BorderLayout.WEST);
-
-        // Create a label to display the image
-        JLabel imageLabel = new JLabel(new ImageIcon(getClass().getResource("SidePic.png")));
-        contentPanel.add(imageLabel, BorderLayout.EAST);
+        contentPanel.add(leftPanel, BorderLayout.CENTER);
     }
 
     // --------------------------------------------------------------------------------------------------------------

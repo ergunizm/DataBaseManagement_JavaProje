@@ -17,7 +17,10 @@ public class AuthFrame extends JFrame {
 
     public AuthFrame() {
         setTitle("Partea - Party Organizing System");
-        setSize(300, 200);
+        // make the frame full screen
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setResizable(false);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
@@ -60,8 +63,8 @@ public class AuthFrame extends JFrame {
                 }
 
                 if (Authentication.authenticate(ssnField.getText(), String.valueOf(passwordField.getPassword()))) {
-                    new HomeFrame(ssnField.getText());
                     dispose();
+                    new HomeFrame(ssnField.getText());
                 } else {
                     JOptionPane.showMessageDialog(AuthFrame.this, "Invalid username or password!");
                 }
@@ -87,7 +90,8 @@ public class AuthFrame extends JFrame {
                 }
 
                 try {
-                    Authentication.register(ssnField.getText(), fnameField.getText(), lnameField.getText(), String.valueOf(passwordField.getPassword()));
+                    Authentication.register(ssnField.getText(), fnameField.getText(), lnameField.getText(),
+                            String.valueOf(passwordField.getPassword()));
                     JOptionPane.showMessageDialog(AuthFrame.this, "Registration successful!");
                 } catch (Exception exception) {
                     JOptionPane.showMessageDialog(AuthFrame.this, exception.getMessage());

@@ -103,7 +103,8 @@ public class DBUtil {
     }
 
     public static String insertToOrganizations(Organization organization) {
-        ColoredOutput.print("Inserting " + organization.toString() + " to the table " + organization.getTableName() + ".",
+        ColoredOutput.print(
+                "Inserting " + organization.toString() + " to the table " + organization.getTableName() + ".",
                 ColoredOutput.Color.MAGENTA_BOLD_BRIGHT);
 
         String query = "insert into organizations (comp_id, otype, glimit, season, price, orgdate, availability) values(?, ?, ?, ?, ?, ?, ?);";
@@ -141,11 +142,11 @@ public class DBUtil {
         return uniquePartyTypes.toArray(new String[0]);
     }
 
-    public static <Organization> List<Organization> selectSeasonTypeIntersect(String searchedSeason, String type){
+    public static <Organization> List<Organization> selectSeasonTypeIntersect(String searchedSeason, String type) {
         ColoredOutput.print("Getting all " + type + " activities and Done on " + searchedSeason + ".",
                 ColoredOutput.Color.MAGENTA_BOLD_BRIGHT);
 
-        String query = "(SELECT DISTINCT * FROM organizations WHERE season=\'" +searchedSeason+ "\') " +
+        String query = "(SELECT DISTINCT * FROM organizations WHERE season=\'" + searchedSeason + "\') " +
                 "INTERSECT (SELECT DISTINCT * FROM organizations WHERE otype=\'" + type + "\');";
 
         ResultSet rs = null;
@@ -172,7 +173,7 @@ public class DBUtil {
         ResultSet rs = null;
         try {
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1,cid);
+            ps.setString(1, cid);
             rs = ps.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -300,7 +301,7 @@ public class DBUtil {
 
             preparedStatement.executeUpdate();
 
-            return orgId+" is deleted!";
+            return orgId + " is deleted!";
 
         } catch (SQLException ex) {
             throw new RuntimeException(ex);

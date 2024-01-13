@@ -13,7 +13,8 @@ public abstract class MainFrame extends JFrame {
         this.ssn = ssn;
 
         setTitle("Partea - Party Organizing System #" + ssn);
-        setSize(576 * 2, 576);
+        // make the frame full screen
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(false);
         setUndecorated(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
