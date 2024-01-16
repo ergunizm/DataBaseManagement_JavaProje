@@ -2,32 +2,40 @@ package com.example.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.geom.RoundRectangle2D;
+
+import com.example.gui.components.TopBarPanel;
 
 public abstract class MainFrame extends JFrame {
     JPanel mainPanel;
-    JPanel contentPanel;
-    String ssn;
+    JPanel topBarPanel;
+    protected JPanel contentPanel;
+    JLabel titleLabel;
+    String username;
 
-    public MainFrame(String ssn) {
-        this.ssn = ssn;
+    public MainFrame(String username) {
+        this.username = username;
 
-        setTitle("Partea - Party Organizing System #" + ssn);
-        // make the frame full screen
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setResizable(false);
+        setIconImage(new ImageIcon("src/resources/images/icons/logo.png").getImage());
+
+        setSize(576 * 2, 576);
+        // setResizable(false);
         setUndecorated(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        mainPanel = new JPanel(new BorderLayout());
+        mainPanel = new JPanel(new GridLayout(1, 2));
 
         contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBackground(Color.black);
+        contentPanel.setBackground(Color.WHITE);
         contentPanel.setOpaque(true);
 
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
+        JLabel imageLabel = new JLabel(new ImageIcon("src/resources/images/side_pic.png"));
 
-        add(mainPanel);
+        mainPanel.add(contentPanel, BorderLayout.WEST);
+        mainPanel.add(imageLabel, BorderLayout.EAST);
+
+        add(mainPanel, BorderLayout.CENTER);
+
         setLocationRelativeTo(null);
         setVisible(true);
     }

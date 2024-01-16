@@ -2,7 +2,7 @@ package com.example;
 
 import java.util.List;
 
-import com.example.gui.AuthFrame;
+import com.example.gui.frames.AuthFrame;
 import com.example.models.User;
 import com.example.utils.DBUtil;
 import com.example.utils.ColoredOutput;
@@ -34,12 +34,15 @@ public class App {
 
         // Test the database connection is working with a simple query of the user table
         List<User> users = DBUtil.selectAllFromDB("users");
-        /* if the first user's first name is "Alice", then the connection is working
-        if (users.get(0).getUserName().equals("Alice")) {
-            ColoredOutput.print("Database test is successful.", ColoredOutput.Color.GREEN_BOLD_BRIGHT);
-        } else {
-            System.err.println("Database test is failed.");
-        }*/
+        /*
+         * if the first user's first name is "Alice", then the connection is working
+         * if (users.get(0).getUserName().equals("Alice")) {
+         * ColoredOutput.print("Database test is successful.",
+         * ColoredOutput.Color.GREEN_BOLD_BRIGHT);
+         * } else {
+         * System.err.println("Database test is failed.");
+         * }
+         */
 
         // ---------------------------------------------------------------------
         javax.swing.SwingUtilities.invokeLater(new Runnable() {

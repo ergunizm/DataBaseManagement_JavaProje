@@ -15,7 +15,7 @@ public class DBUtil {
     private static Connection connection = null;
 
     private static final String JDBC_URL = "jdbc:postgresql://localhost/party_db";
-    private static final String USERNAME = "postgres";
+    private static final String USERNAME = "kahler";
     private static final String PASSWORD = "1234";
 
     // ------------------------------------------------------------------------------------------------------------------------
