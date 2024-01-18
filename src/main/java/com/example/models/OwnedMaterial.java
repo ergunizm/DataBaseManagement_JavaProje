@@ -11,7 +11,7 @@ public class OwnedMaterial extends Model {
 
     @Override
     public String toString() {
-        return "\'" + userSsn + "\' , " + materialId;
+        return "\'" + userSsn + "\' , \'" + materialId+"\'";
     }
 
     // #region Getters and Setters --------------------------------------------

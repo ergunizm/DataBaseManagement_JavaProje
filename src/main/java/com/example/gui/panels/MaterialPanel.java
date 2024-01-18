@@ -111,7 +111,7 @@ public class MaterialPanel extends JPanel {
                         dftm.addColumn("Price");
                         for (Object obj : infoArr) {
                             String bes[] = obj.toString().split(",");
-                            dftm.addRow(new Object[] { bes[2], bes[3], bes[4] });
+                            dftm.addRow(new Object[] { bes[2], bes[3], bes[4].substring(0, bes[4].length()-1) });
                         }
                         matTable.setModel(dftm);
                     }
@@ -126,6 +126,7 @@ public class MaterialPanel extends JPanel {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                mats = DBUtil.selectAllFromDB("materials");
                 String barc = barcode.getText();
                 for (Material mt : mats) {
                     if (mt.getBarcode().equals(barc)) {

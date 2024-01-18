@@ -47,11 +47,11 @@ public class CompanyPanel extends JPanel {
         cidField = new JTextField(9);
         cidField.setFont(Theme.font);
 
-        orgs = DBUtil.selectOrgOfCompany(cidField.getText());
-
         getButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                orgs = DBUtil.selectOrgOfCompany(cidField.getText());
+
                 if (!orgs.isEmpty()) {
                     dftm.setColumnCount(0);
                     dftm.setRowCount(0);

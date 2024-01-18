@@ -54,6 +54,6 @@ public class Material extends Model {
 
     @Override
     public String toString() {
-        return "\'" + barcode + "," + companyId + "," + materialId + "," + materialType + "," + price + "\'";
+        return "\'" + materialId + "\',\'" + companyId + "\',\'" + materialType + "\',\'" + barcode + "\'," + price + "";
     }
 }

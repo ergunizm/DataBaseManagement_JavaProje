@@ -15,7 +15,7 @@ public class DBUtil {
     private static Connection connection = null;
 
     private static final String JDBC_URL = "jdbc:postgresql://localhost/party_db";
-    private static final String USERNAME = "kahler";
+    private static final String USERNAME = "postgres";
     private static final String PASSWORD = "1234";
 
     // ------------------------------------------------------------------------------------------------------------------------
@@ -103,8 +103,7 @@ public class DBUtil {
     }
 
     public static String insertToOrganizations(Organization organization) {
-        ColoredOutput.print(
-                "Inserting " + organization.toString() + " to the table " + organization.getTableName() + ".",
+        ColoredOutput.print("Inserting " + organization.toString() + " to the table " + organization.getTableName() + ".",
                 ColoredOutput.Color.MAGENTA_BOLD_BRIGHT);
 
         String query = "insert into organizations (comp_id, otype, glimit, season, price, orgdate, availability) values(?, ?, ?, ?, ?, ?, ?);";
@@ -142,11 +141,11 @@ public class DBUtil {
         return uniquePartyTypes.toArray(new String[0]);
     }
 
-    public static <Organization> List<Organization> selectSeasonTypeIntersect(String searchedSeason, String type) {
+    public static <Organization> List<Organization> selectSeasonTypeIntersect(String searchedSeason, String type){
         ColoredOutput.print("Getting all " + type + " activities and Done on " + searchedSeason + ".",
                 ColoredOutput.Color.MAGENTA_BOLD_BRIGHT);
 
-        String query = "(SELECT DISTINCT * FROM organizations WHERE season=\'" + searchedSeason + "\') " +
+        String query = "(SELECT DISTINCT * FROM organizations WHERE season=\'" +searchedSeason+ "\') " +
                 "INTERSECT (SELECT DISTINCT * FROM organizations WHERE otype=\'" + type + "\');";
 
         ResultSet rs = null;
@@ -173,7 +172,7 @@ public class DBUtil {
         ResultSet rs = null;
         try {
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, cid);
+            ps.setString(1,cid);
             rs = ps.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -280,7 +279,7 @@ public class DBUtil {
             preparedStatement.setDouble(6, organization.getPrice());
             preparedStatement.setInt(7, organization.getOrgDate());
             preparedStatement.setBoolean(8, organization.getAvailability());
-            preparedStatement.setString(9, oldId);
+            preparedStatement.setInt(9, Integer.parseInt(oldId));
 
             int result = preparedStatement.executeUpdate();
 
@@ -297,11 +296,11 @@ public class DBUtil {
         String query = "delete from organizations where oid = ?;";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, orgId);
+            preparedStatement.setInt(1, Integer.parseInt(orgId));
 
             preparedStatement.executeUpdate();
 
-            return orgId + " is deleted!";
+            return orgId+" is deleted!";
 
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
